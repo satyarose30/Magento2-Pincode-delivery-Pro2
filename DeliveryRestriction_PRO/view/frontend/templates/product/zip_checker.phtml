@@ -1,0 +1,70 @@
+<?php
+/**
+ * Custom_DeliveryRestriction — Product Page Zip Checker Widget
+ *
+ * FIX (CODE_REVIEW Medium): All dynamic values use correct Magento escaper contexts:
+ *   - escapeHtml()     for text node content
+ *   - escapeHtmlAttr() for HTML attribute values
+ *   - escapeUrl()      for URL values
+ *   - JSON config passed through Block::getComponentConfigJson() (JSON_HEX_* flags)
+ *     rather than raw string interpolation into JS.
+ *
+ * @var \Custom\DeliveryRestriction\Block\Product\ZipChecker $block
+ */
+
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<div class="custom-dr-zipcheckerwidget" id="custom-dr-zip-checker">
+    <div class="custom-dr-zipcheckerwidget__header">
+        <span class="custom-dr-zipcheckerwidget__truck-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13" rx="1"/>
+                <path d="M16 8h4l3 5v4h-7V8z"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+        </span>
+        <h4 class="custom-dr-zipcheckerwidget__title">
+            <?= /* escapeHtml — text content */ $block->escapeHtml($block->getWidgetTitle()) ?>
+        </h4>
+    </div>
+
+    <div class="custom-dr-zipcheckerwidget__form">
+        <input type="text"
+               id="custom-dr-zip-input"
+               class="custom-dr-zipcheckerwidget__input input-text"
+               placeholder="<?= /* escapeHtmlAttr — attribute value */ $block->escapeHtmlAttr($block->getInputPlaceholder()) ?>"
+               maxlength="10"
+               autocomplete="postal-code"
+               aria-label="<?= $block->escapeHtmlAttr(__('Enter zip or postal code')) ?>"
+               aria-describedby="custom-dr-zip-result"/>
+        <button type="button"
+                id="custom-dr-check-btn"
+                class="custom-dr-zipcheckerwidget__btn action primary"
+                aria-label="<?= $block->escapeHtmlAttr(__('Check delivery availability')) ?>">
+            <span><?= $block->escapeHtml(__('Check')) ?></span>
+        </button>
+    </div>
+
+    <div id="custom-dr-zip-result"
+         class="custom-dr-zipcheckerwidget__result"
+         role="status"
+         aria-live="polite"
+         aria-atomic="true">
+    </div>
+</div>
+
+<script>
+require(['Custom_DeliveryRestriction/js/zip-checker'], function (ZipChecker) {
+    'use strict';
+    /**
+     * FIX LOW: JSON config passed via Block::getComponentConfigJson() which applies
+     * JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP flags —
+     * safe for embedding inside a <script> tag without XSS risk.
+     */
+    ZipChecker.init(<?= /* Already JSON-encoded and XSS-safe */ $block->getComponentConfigJson() ?>);
+});
+</script>

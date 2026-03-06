@@ -1,0 +1,47 @@
+<?php
+/**
+ * Custom_DeliveryRestriction — Checkout Pincode Checker Config Injector
+ * Outputs window.customDrCheckoutConfig for checkout-zip-validator.js mixin.
+ *
+ * @var \Custom\DeliveryRestriction\Block\Checkout\ZipCheckerConfig $block
+ */
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<script>
+window.customDrCheckoutConfig = <?= /* JSON_HEX_* encoded — XSS safe */ $block->getConfigJson() ?>;
+</script>
+<style>
+/* ── Checkout pincode result panel — injected after shipping postcode field ── */
+.custom-dr-checkout-result {
+    margin: 8px 0 4px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    border-left: 4px solid transparent;
+    display: none;
+}
+.custom-dr-checkout-result.is-visible    { display: block; }
+.custom-dr-checkout-result--available    { background:#edf7ed; border-color:#2d7a2d; color:#2d7a2d; }
+.custom-dr-checkout-result--unavailable  { background:#fdf1f1; border-color:#b22222; color:#b22222; }
+.custom-dr-checkout-result--error        { background:#fff8e6; border-color:#8a6500; color:#8a6500; }
+.custom-dr-checkout-result--checking     { background:#f0f4ff; border-color:#1a6fb0; color:#1a6fb0; }
+
+.custom-dr-checkout-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 12px;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+.custom-dr-checkout-badge--cod-ok        { background:#e8f5e9; color:#1b5e20; }
+.custom-dr-checkout-badge--cod-no        { background:#ffebee; color:#b71c1c; }
+.custom-dr-checkout-badge--pp-eligible   { background:#e3f2fd; color:#0d47a1; }
+.custom-dr-checkout-badge--pp-no         { background:#fafafa; color:#555;    }
+</style>

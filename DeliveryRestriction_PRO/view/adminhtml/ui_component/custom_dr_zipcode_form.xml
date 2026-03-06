@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">custom_dr_zipcode_form.custom_dr_zipcode_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Zip Code Rule</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+
+    <settings>
+        <buttons>
+            <button name="back">
+                <url path="*/*/index"/>
+                <class>back</class>
+                <label translate="true">Back</label>
+            </button>
+            <button name="save">
+                <url path="*/*/save"/>
+                <class>save primary</class>
+                <label translate="true">Save Rule</label>
+            </button>
+            <button name="save_and_continue">
+                <class>save</class>
+                <label translate="true">Save &amp; Continue Edit</label>
+                <param name="back">true</param>
+                <url path="*/*/save"/>
+            </button>
+        </buttons>
+        <namespace>custom_dr_zipcode_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>custom_dr_zipcode_form.custom_dr_zipcode_form_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="custom_dr_zipcode_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="*/*/save"/>
+        </settings>
+        <aclResource>Custom_DeliveryRestriction::manage_zipcodes</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="custom_dr_zipcode_form_data_source">
+            <settings>
+                <requestFieldName>zipcode_id</requestFieldName>
+                <primaryFieldName>zipcode_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <fieldset name="general">
+        <settings>
+            <label translate="true">Zip Code Rule Details</label>
+        </settings>
+
+        <field name="zipcode_id" formElement="input">
+            <settings><dataType>text</dataType><visible>false</visible></settings>
+        </field>
+
+        <field name="zip_code" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Zip / Postal Code</label>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <notice translate="true">Exact: 10001 | Wildcard: 100* | Range: 10000-10099 | UK: SW1A* — case-insensitive.</notice>
+            </settings>
+        </field>
+
+        <field name="restriction_type" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Restriction Type</label>
+                <validation><rule name="required-entry" xsi:type="boolean">true</rule></validation>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Custom\DeliveryRestriction\Model\Config\Source\RestrictionType"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="status" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Status</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Config\Model\Config\Source\Enabledisable"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="sort_order" formElement="input">
+            <settings>
+                <dataType>number</dataType>
+                <label translate="true">Sort Order</label>
+                <notice translate="true">Lower numbers are evaluated first. Whitelist rules always take precedence over blacklist.</notice>
+            </settings>
+        </field>
+
+        <field name="customer_group_ids" formElement="multiselect">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Customer Groups</label>
+                <notice translate="true">Leave empty to apply to ALL customer groups.</notice>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Custom\DeliveryRestriction\Model\Config\Source\CustomerGroups"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+
+        <field name="store_ids" formElement="multiselect">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Store Views</label>
+                <notice translate="true">Leave empty to apply to ALL store views.</notice>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\Store\Ui\Component\Listing\Column\Store\Options"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+
+        <field name="description" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Admin Description</label>
+                <notice translate="true">Internal note — never shown to customers.</notice>
+            </settings>
+        </field>
+
+        <field name="cod_restricted" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">COD Restricted</label>
+                <notice translate="true">If Yes, Cash on Delivery (and other configured payment codes) will be hidden at checkout for orders to this zip code.</notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="partial_payment_eligible" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Partial Payment Eligible</label>
+                <notice translate="true">If Yes, the partial/installment payment badge will be shown for customers with this zip code.</notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+    </fieldset>
+</form>

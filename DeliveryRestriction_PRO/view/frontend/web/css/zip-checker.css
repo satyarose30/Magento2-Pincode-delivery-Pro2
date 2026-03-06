@@ -1,0 +1,277 @@
+/* Custom_DeliveryRestriction — Zip Checker Widget Styles
+   Compatible with Magento Luma / Blank themes.
+   Uses CSS custom properties for easy theme overriding. */
+
+:root {
+    --cdr-primary:     #1a6fb0;
+    --cdr-available:   #2d7a2d;
+    --cdr-unavailable: #b22222;
+    --cdr-warning:     #8a6500;
+    --cdr-border:      #d4d4d4;
+    --cdr-bg:          #f8f9fb;
+    --cdr-radius:      6px;
+    --cdr-font:        inherit;
+}
+
+/* ── Widget container ─────────────────────────────────────── */
+.custom-dr-zipcheckerwidget {
+    background: var(--cdr-bg);
+    border: 1px solid var(--cdr-border);
+    border-radius: var(--cdr-radius);
+    padding: 16px 18px;
+    margin: 18px 0;
+    font-family: var(--cdr-font);
+    max-width: 420px;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.custom-dr-zipcheckerwidget__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.custom-dr-zipcheckerwidget__truck-icon {
+    color: var(--cdr-primary);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.custom-dr-zipcheckerwidget__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ── Input row ────────────────────────────────────────────── */
+.custom-dr-zipcheckerwidget__form {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.custom-dr-zipcheckerwidget__input {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--cdr-border);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.15s;
+}
+
+.custom-dr-zipcheckerwidget__input:focus {
+    outline: none;
+    border-color: var(--cdr-primary);
+    box-shadow: 0 0 0 2px rgba(26, 111, 176, 0.18);
+}
+
+.custom-dr-zipcheckerwidget__btn {
+    height: 40px;
+    padding: 0 18px;
+    background: var(--cdr-primary);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, opacity 0.15s;
+}
+
+.custom-dr-zipcheckerwidget__btn:hover:not(:disabled) {
+    background: #155a8a;
+}
+
+.custom-dr-zipcheckerwidget__btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* ── Result panel ─────────────────────────────────────────── */
+.custom-dr-zipcheckerwidget__result {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    border-left: 4px solid transparent;
+}
+
+.custom-dr-zipcheckerwidget__result--available {
+    background: #edf7ed;
+    border-left-color: var(--cdr-available);
+    color: var(--cdr-available);
+}
+
+.custom-dr-zipcheckerwidget__result--unavailable {
+    background: #fdf1f1;
+    border-left-color: var(--cdr-unavailable);
+    color: var(--cdr-unavailable);
+}
+
+.custom-dr-zipcheckerwidget__result--error {
+    background: #fff8e6;
+    border-left-color: var(--cdr-warning);
+    color: var(--cdr-warning);
+}
+
+.custom-dr-zipcheckerwidget__result--warning {
+    background: #fff8e6;
+    border-left-color: var(--cdr-warning);
+    color: var(--cdr-warning);
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .custom-dr-zipcheckerwidget__form {
+        flex-direction: column;
+    }
+    .custom-dr-zipcheckerwidget__btn {
+        width: 100%;
+    }
+}
+
+/* ── Payment badges (COD / Partial Payment) ───────────────── */
+.custom-dr-zipcheckerwidget__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-top: 6px;
+    margin-right: 6px;
+    line-height: 1.4;
+}
+
+.custom-dr-zipcheckerwidget__badge--cod-available {
+    background: #e8f5e9;
+    color: #1b5e20;
+    border: 1px solid #a5d6a7;
+}
+
+.custom-dr-zipcheckerwidget__badge--cod-unavailable {
+    background: #ffebee;
+    color: #b71c1c;
+    border: 1px solid #ef9a9a;
+}
+
+.custom-dr-zipcheckerwidget__badge--partial-eligible {
+    background: #e3f2fd;
+    color: #0d47a1;
+    border: 1px solid #90caf9;
+}
+
+.custom-dr-zipcheckerwidget__badge--partial-unavailable {
+    background: #fafafa;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+/* ── Checkout Widget ──────────────────────────────────────── */
+.custom-dr-checkout-checker {
+    background: #f8f9fb;
+    border: 1px solid #d4d4d4;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin: 0 0 20px;
+    max-width: 520px;
+}
+
+.custom-dr-checkout-checker__header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 10px;
+}
+
+.custom-dr-checkout-checker__icon { color: #1a6fb0; display: flex; }
+
+.custom-dr-checkout-checker__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+}
+
+.custom-dr-checkout-checker__form {
+    display: flex;
+    gap: 8px;
+}
+
+.custom-dr-checkout-checker__input {
+    flex: 1;
+    min-width: 0;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid #d4d4d4;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.custom-dr-checkout-checker__input:focus {
+    outline: none;
+    border-color: #1a6fb0;
+    box-shadow: 0 0 0 2px rgba(26,111,176,.15);
+}
+
+.custom-dr-checkout-checker__btn {
+    height: 38px;
+    padding: 0 16px;
+    background: #fff;
+    color: #1a6fb0;
+    border: 1px solid #1a6fb0;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+}
+
+.custom-dr-checkout-checker__btn:hover:not(:disabled) {
+    background: #1a6fb0;
+    color: #fff;
+}
+
+.custom-dr-checkout-checker__btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.custom-dr-checkout-checker__result {
+    display: none;
+    margin-top: 8px;
+}
+
+.custom-dr-checkout-checker__badge {
+    display: block;
+    padding: 7px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 4px;
+    border-left: 3px solid transparent;
+}
+
+.custom-dr-checkout-checker__badge--available    { background:#edf7ed; border-color:#2d7a2d; color:#2d7a2d; }
+.custom-dr-checkout-checker__badge--unavailable  { background:#fdf1f1; border-color:#b22222; color:#b22222; }
+.custom-dr-checkout-checker__badge--estimate     { background:#e8f4fd; border-color:#1a6fb0; color:#1a6fb0; }
+.custom-dr-checkout-checker__badge--cod-available   { background:#e8f5e9; border-color:#388e3c; color:#388e3c; }
+.custom-dr-checkout-checker__badge--cod-unavailable { background:#ffebee; border-color:#c62828; color:#c62828; }
+.custom-dr-checkout-checker__badge--pp-available    { background:#e3f2fd; border-color:#1565c0; color:#1565c0; }
+.custom-dr-checkout-checker__badge--pp-unavailable  { background:#fafafa; border-color:#bbb; color:#777; }
+.custom-dr-checkout-checker__badge--warning  { background:#fff8e6; border-color:#e65100; color:#e65100; }
+.custom-dr-checkout-checker__badge--error    { background:#fff8e6; border-color:#e65100; color:#e65100; }
+
+@media (max-width:480px) {
+    .custom-dr-checkout-checker__form { flex-direction: column; }
+    .custom-dr-checkout-checker__btn  { width: 100%; }
+}

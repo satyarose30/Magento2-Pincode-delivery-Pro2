@@ -1,0 +1,57 @@
+<?php
+/**
+ * Custom_DeliveryRestriction — Checkout Page Pincode Checker
+ * Shows the zip checker at the top of checkout shipping step.
+ * Informational — hard block is handled by ShippingInformationPlugin.
+ *
+ * @var \Custom\DeliveryRestriction\Block\Checkout\ZipChecker $block
+ */
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<div class="custom-dr-checkout-checker" id="custom-dr-checkout-checker">
+    <div class="custom-dr-checkout-checker__header">
+        <span class="custom-dr-checkout-checker__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+            </svg>
+        </span>
+        <strong class="custom-dr-checkout-checker__title">
+            <?= $block->escapeHtml($block->getWidgetTitle()) ?>
+        </strong>
+    </div>
+
+    <div class="custom-dr-checkout-checker__form">
+        <input type="text"
+               id="custom-dr-checkout-zip-input"
+               class="custom-dr-checkout-checker__input input-text"
+               placeholder="<?= $block->escapeHtmlAttr($block->getInputPlaceholder()) ?>"
+               maxlength="10"
+               autocomplete="postal-code"
+               aria-label="<?= $block->escapeHtmlAttr(__('Enter zip or postal code to verify delivery')) ?>"
+               aria-describedby="custom-dr-checkout-zip-result"/>
+        <button type="button"
+                id="custom-dr-checkout-check-btn"
+                class="custom-dr-checkout-checker__btn action secondary"
+                aria-label="<?= $block->escapeHtmlAttr(__('Check delivery availability')) ?>">
+            <span><?= $block->escapeHtml(__('Verify')) ?></span>
+        </button>
+    </div>
+
+    <div id="custom-dr-checkout-zip-result"
+         class="custom-dr-checkout-checker__result"
+         role="status"
+         aria-live="polite"
+         aria-atomic="true">
+    </div>
+</div>
+
+<script>
+require(['Custom_DeliveryRestriction/js/checkout-zip-checker'], function (CheckoutZipChecker) {
+    'use strict';
+    CheckoutZipChecker.init(<?= $block->getComponentConfigJson() ?>);
+});
+</script>

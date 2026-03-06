@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- ── Custom dedicated logger ──────────────────────────────────────────── -->
+    <type name="Custom\DeliveryRestriction\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Custom\DeliveryRestriction\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">custom_delivery_restriction</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Custom\DeliveryRestriction\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- ── Checkout shipping-step plugin (Layer 1 protection) ───────────────── -->
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="custom_delivery_restriction_shipping_info_plugin"
+                type="Custom\DeliveryRestriction\Plugin\ShippingInformationPlugin"
+                sortOrder="10"/>
+    </type>
+
+    <!-- ── Payment method filter — COD restriction by zip (Layer 3) ────────── -->
+    <type name="Magento\Payment\Model\MethodList">
+        <plugin name="custom_delivery_restriction_payment_method_plugin"
+                type="Custom\DeliveryRestriction\Plugin\PaymentMethodPlugin"
+                sortOrder="20"/>
+    </type>
+
+    <!--
+        ── Admin grid collection (CODE_REVIEW Low: virtual type approach)
+        Using CollectionFactory mapping is the documented Magento 2.3+ approach
+        for UI component data providers with custom search result classes.
+    -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="custom_dr_zipcode_listing_data_source"
+                      xsi:type="string">Custom\DeliveryRestriction\Model\ResourceModel\ZipCode\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Custom\DeliveryRestriction\Model\ResourceModel\ZipCode\Grid\Collection">
+        <arguments>
+            <argument name="mainTable"    xsi:type="string">custom_dr_zipcode</argument>
+            <argument name="eventPrefix"  xsi:type="string">custom_dr_zipcode_grid_collection</argument>
+            <argument name="eventObject"  xsi:type="string">custom_dr_zipcode_grid_collection</argument>
+            <argument name="resourceModel"
+                      xsi:type="string">Custom\DeliveryRestriction\Model\ResourceModel\ZipCode</argument>
+        </arguments>
+    </type>
+
+</config>

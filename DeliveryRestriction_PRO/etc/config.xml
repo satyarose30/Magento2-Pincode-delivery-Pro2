@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <delivery_restriction>
+            <general>
+                <enabled>1</enabled>
+                <use_db_zipcodes>0</use_db_zipcodes>
+                <restriction_type>blacklist</restriction_type>
+                <zip_codes></zip_codes>
+                <error_message>Delivery is not available to your zip code.</error_message>
+            </general>
+            <customer_groups>
+                <enabled>0</enabled>
+                <group_ids></group_ids>
+            </customer_groups>
+            <product_page>
+                <enabled>1</enabled>
+                <widget_title>Check Delivery Availability</widget_title>
+                <available_message>Great news! Delivery is available to your area.</available_message>
+                <unavailable_message>Sorry, delivery is not available to your zip code.</unavailable_message>
+                <input_placeholder>Enter ZIP / Postal Code</input_placeholder>
+            </product_page>
+            <delivery_estimate>
+                <enabled>1</enabled>
+                <min_days>3</min_days>
+                <max_days>7</max_days>
+                <delivery_text_template>Estimated delivery: {min_date} - {max_date} ({min_days}-{max_days} business days)</delivery_text_template>
+            </delivery_estimate>
+            <checkout>
+                <block_order>1</block_order>
+                <checkout_error_message>We cannot deliver to zip code %1. Please update your shipping address.</checkout_error_message>
+                <show_zip_checker>1</show_zip_checker>
+                <checkout_checker_title>Check Delivery to Your Pincode</checkout_checker_title>
+            </checkout>
+            <cod_payment>
+                <enabled>0</enabled>
+                <payment_codes>cashondelivery</payment_codes>
+                <restriction_mode>blacklist</restriction_mode>
+                <zip_codes></zip_codes>
+                <available_message>Cash on Delivery (COD) is available for your zip code.</available_message>
+                <unavailable_message>Cash on Delivery (COD) is not available for your zip code.</unavailable_message>
+            </cod_payment>
+            <partial_payment>
+                <enabled>0</enabled>
+                <zip_codes></zip_codes>
+                <deposit_percent>30</deposit_percent>
+                <eligible_message>Partial payment available — pay {percent}% now, rest on delivery.</eligible_message>
+                <not_eligible_message>Partial payment is not available for your zip code.</not_eligible_message>
+            </partial_payment>
+            <email>
+                <enabled>0</enabled>
+                <sender>general</sender>
+                <recipient></recipient>
+                <cc></cc>
+            </email>
+            <logging>
+                <enabled>0</enabled>
+            </logging>
+        </delivery_restriction>
+    </default>
+</config>

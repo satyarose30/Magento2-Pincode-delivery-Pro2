@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!--
+            Injects the zip/pincode checker widget into the checkout page.
+            Uses Custom\DeliveryRestriction\Block\Checkout\ZipChecker which
+            outputs nothing when disabled in config (isEnabled() guard).
+        -->
+        <referenceContainer name="before.body.end">
+            <block class="Custom\DeliveryRestriction\Block\Checkout\ZipChecker"
+                   name="custom.delivery.restriction.checkout.zip.checker"
+                   template="Custom_DeliveryRestriction::checkout/zip_checker.phtml"
+                   ifconfig="delivery_restriction/general/enabled"/>
+        </referenceContainer>
+    </body>
+</page>

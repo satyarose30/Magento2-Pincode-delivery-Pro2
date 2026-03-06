@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Custom_DeliveryRestriction::delivery_restriction"
+             title="Delivery Restriction"
+             module="Custom_DeliveryRestriction"
+             sortOrder="60"
+             parent="Magento_Backend::marketing"
+             resource="Custom_DeliveryRestriction::manage_zipcodes"/>
+        <add id="Custom_DeliveryRestriction::manage_zipcodes"
+             title="Manage Zip Codes"
+             module="Custom_DeliveryRestriction"
+             sortOrder="10"
+             parent="Custom_DeliveryRestriction::delivery_restriction"
+             action="custom_dr/zipcode/index"
+             resource="Custom_DeliveryRestriction::manage_zipcodes"/>
+    </menu>
+</config>

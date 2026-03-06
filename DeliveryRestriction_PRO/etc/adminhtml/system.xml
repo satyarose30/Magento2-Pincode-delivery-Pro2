@@ -1,0 +1,419 @@
+<?xml version="1.0"?>
+<!--
+    FIX (CODE_REVIEW High): Uses the correct <system> wrapper element per
+    Magento's system_file.xsd — replaces the incorrect <system> shorthand used
+    in earlier versions which caused config-section loading issues in strict environments.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="custom_extensions" translate="label" sortOrder="400">
+            <label>Custom Extensions</label>
+        </tab>
+
+        <section id="delivery_restriction" translate="label" type="text" sortOrder="100"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Delivery Restriction &amp; Zip Checker PRO</label>
+            <tab>custom_extensions</tab>
+            <resource>Custom_DeliveryRestriction::config</resource>
+
+            <!-- ── General ──────────────────────────────────────────────── -->
+            <group id="general" translate="label" type="text" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="use_db_zipcodes" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Zip Code Source</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[
+                        <b>No:</b> Use textarea below (quick setup).<br/>
+                        <b>Yes:</b> Use <em>Marketing &rarr; Delivery Restriction &rarr; Manage Zip Codes</em>
+                        admin grid (supports per-entry customer groups, categories, stores, sort order).
+                    ]]></comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+
+                <field id="restriction_type" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Restriction Mode (Textarea source only)</label>
+                    <source_model>Custom\DeliveryRestriction\Model\Config\Source\RestrictionType</source_model>
+                    <comment><![CDATA[
+                        <b>Blacklist:</b> Listed zips are blocked.<br/>
+                        <b>Whitelist:</b> Only listed zips can order.
+                    ]]></comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+
+                <field id="zip_codes" translate="label comment" type="textarea" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Zip / Postal Codes (Textarea)</label>
+                    <comment><![CDATA[
+                        One per line. Supports:<br/>
+                        Exact: <code>10001</code> &nbsp;|&nbsp;
+                        Wildcard: <code>100*</code> &nbsp;|&nbsp;
+                        Range: <code>10000-10099</code> &nbsp;|&nbsp;
+                        Alpha: <code>SW1A*</code>
+                    ]]></comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+
+                <field id="error_message" translate="label" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Error Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Customer Groups ──────────────────────────────────────── -->
+            <group id="customer_groups" translate="label" type="text" sortOrder="20"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Customer Group Restrictions</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Customer Group Scoping</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled, restrictions only apply to the selected groups. All other groups can order freely.</comment>
+                </field>
+
+                <field id="group_ids" translate="label comment" type="multiselect" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Restricted Customer Groups</label>
+                    <source_model>Custom\DeliveryRestriction\Model\Config\Source\CustomerGroups</source_model>
+                    <comment>Leave empty to apply restrictions to ALL customer groups.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Product Page Widget ──────────────────────────────────── -->
+            <group id="product_page" translate="label" type="text" sortOrder="30"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Page Widget</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Zip Checker on Product Page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="widget_title" translate="label" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Widget Title</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="available_message" translate="label" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Available Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="unavailable_message" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Unavailable Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="input_placeholder" translate="label" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Input Placeholder</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Delivery Estimate ────────────────────────────────────── -->
+            <group id="delivery_estimate" translate="label" type="text" sortOrder="40"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Delivery Date Estimation</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Estimated Delivery Date</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Shows estimated delivery window after successful zip check. Business days only (Mon-Fri).</comment>
+                </field>
+                <field id="min_days" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Minimum Business Days</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="max_days" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum Business Days</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="delivery_text_template" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Delivery Text Template (Editable)</label>
+                    <comment><![CDATA[
+                        Shown after a successful zip check. Placeholders:<br/>
+                        <code>{min_date}</code> earliest date &nbsp;|&nbsp;
+                        <code>{max_date}</code> latest date &nbsp;|&nbsp;
+                        <code>{min_days}</code> min days &nbsp;|&nbsp;
+                        <code>{max_days}</code> max days
+                    ]]></comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Checkout Block ───────────────────────────────────────── -->
+            <group id="checkout" translate="label" type="text" sortOrder="50"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Checkout Restriction &amp; Live Pincode Checker</label>
+
+                <field id="block_order" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Block Orders for Restricted Zips</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Validation fires at shipping step (plugin) AND final order submit (observer) — catches REST/headless orders too.</comment>
+                </field>
+                <field id="checkout_error_message" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkout Error Message</label>
+                    <comment>Use %1 as placeholder for the customer's zip code.</comment>
+                    <depends><field id="block_order">1</field></depends>
+                </field>
+                <field id="show_zip_checker" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Live Pincode Checker at Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Adds a real-time delivery availability indicator to the checkout shipping step as the customer types their pincode.</comment>
+                </field>
+                <field id="checkout_checker_title" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkout Pincode Checker Title</label>
+                    <depends><field id="show_zip_checker">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── COD / Payment Method Restriction ─────────────────────── -->
+            <group id="cod_payment" translate="label" type="text" sortOrder="55"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>COD / Payment Method Restriction by Zip</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable COD Restriction by Zip</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Hides or shows the specified payment methods based on the customer's zip code at checkout.</comment>
+                </field>
+                <field id="payment_codes" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment Method Code(s)</label>
+                    <comment>Comma-separated codes. Default: cashondelivery. Codes visible in Stores → Config → Payment Methods.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="restriction_mode" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>COD Restriction Mode (Config source)</label>
+                    <source_model>Custom\DeliveryRestriction\Model\Config\Source\RestrictionType</source_model>
+                    <comment>Blacklist = listed zips cannot use COD. Whitelist = only listed zips can use COD. Ignored if using DB zip grid (use per-record toggle instead).</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="zip_codes" translate="label comment" type="textarea" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>COD Zip Codes (Config source)</label>
+                    <comment>One per line. Exact, wildcard (100*), range (10000-10099). Ignored when DB grid is active.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="available_message" translate="label" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>COD Available Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="unavailable_message" translate="label" type="text" sortOrder="60"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>COD Not Available Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Partial Payment / Installments ───────────────────────── -->
+            <group id="partial_payment" translate="label" type="text" sortOrder="56"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Partial Payment / Installments by Zip</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Partial Payment Eligibility by Zip</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Shows a partial/installment payment badge on the product page and checkout for eligible zip codes.</comment>
+                </field>
+                <field id="zip_codes" translate="label comment" type="textarea" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Eligible Zip Codes (Config source)</label>
+                    <comment>One per line. Exact, wildcard, range. Ignored when DB grid is active — use per-record Partial Payment toggle instead.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="eligible_message" translate="label" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Partial Payment Available Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="not_eligible_message" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Partial Payment Not Available Message</label>
+                    <comment>Optional. Leave blank to show nothing for ineligible zip codes.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Admin Email Notification ─────────────────────────────── -->
+            <group id="email" translate="label" type="text" sortOrder="60"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Admin Email Notification</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Send Admin Alert on Block</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Emails the admin whenever a customer order is blocked due to a restricted zip.</comment>
+                </field>
+                <field id="sender" translate="label" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="recipient" translate="label" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Recipient Email</label>
+                    <validate>validate-email</validate>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="cc" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CC Email(s)</label>
+                    <comment>Optional. Comma-separated. Invalid addresses are skipped silently.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Logging ──────────────────────────────────────────────── -->
+            <group id="logging" translate="label" type="text" sortOrder="70"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Debug Logging</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Logs to <code>var/log/custom/delivery_restriction.log</code>. Disable in production unless debugging.</comment>
+                </field>
+            </group>
+
+            <!-- ── Checkout Page Pincode Widget ─────────────────────────── -->
+            <group id="checkout_widget" translate="label" type="text" sortOrder="55"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Checkout Page Pincode Checker</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Pincode Checker on Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Displays the zip/pincode checker above the checkout shipping address form.</comment>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkout Widget Title</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Delivery Estimate Text ───────────────────────────────── -->
+            <group id="delivery_estimate" translate="label" type="text" sortOrder="40"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Delivery Date Estimation</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Estimated Delivery Date</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Shows estimated delivery window. Business days only (Mon-Fri).</comment>
+                </field>
+                <field id="min_days" translate="label" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Minimum Business Days</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="max_days" translate="label" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum Business Days</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="estimate_text" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Delivery Estimate Text Format</label>
+                    <comment><![CDATA[Use <b>%1</b> for start date, <b>%2</b> for end date.]]></comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── COD Restriction ──────────────────────────────────────── -->
+            <group id="cod" translate="label" type="text" sortOrder="80"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cash on Delivery (COD) Restriction</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable COD Restriction</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled, COD availability is checked per zip code rule. Configure per-rule in Marketing &gt; Manage Zip Codes.</comment>
+                </field>
+                <field id="block_cod_payment" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove COD from Payment Methods for Restricted Zips</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Yes = COD option is hidden at checkout when zip is restricted for COD.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="cod_available_message" translate="label" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>COD Available Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="cod_unavailable_message" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>COD Unavailable Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+            <!-- ── Partial Payment ──────────────────────────────────────── -->
+            <group id="partial_payment" translate="label" type="text" sortOrder="90"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Partial Payment (Deposit)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Partial Payment Feature</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Shows partial payment / deposit badge on product page and checkout based on zip code.</comment>
+                </field>
+                <field id="deposit_percent" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Deposit Percentage (%)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Percentage required upfront. Used as %1 placeholder in messages below.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="pp_available_message" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Partial Payment Available Message</label>
+                    <comment>Use %1 for deposit percentage.</comment>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="pp_unavailable_message" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Partial Payment Unavailable Message</label>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+            </group>
+
+        </section>
+    </system>
+</config>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">custom_dr_zipcode_listing.custom_dr_zipcode_listing_data_source</item>
+        </item>
+    </argument>
+
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="*/*/new"/>
+                <class>primary</class>
+                <label translate="true">Add New Zip Code Rule</label>
+            </button>
+        </buttons>
+        <spinner>custom_dr_zipcode_listing_columns</spinner>
+        <deps>
+            <dep>custom_dr_zipcode_listing.custom_dr_zipcode_listing_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="custom_dr_zipcode_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Custom_DeliveryRestriction::manage_zipcodes</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="custom_dr_zipcode_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>zipcode_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <settings><sticky>true</sticky></settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <columns name="custom_dr_zipcode_listing_columns">
+
+        <column name="zipcode_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sortOrder>10</sortOrder>
+            </settings>
+        </column>
+
+        <column name="zip_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Zip / Postal Code</label>
+                <sortOrder>20</sortOrder>
+            </settings>
+        </column>
+
+        <column name="restriction_type" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Type</label>
+                <sortOrder>30</sortOrder>
+                <options class="Custom\DeliveryRestriction\Model\Config\Source\RestrictionType"/>
+            </settings>
+        </column>
+
+        <column name="status" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+                <sortOrder>40</sortOrder>
+                <options class="Magento\Config\Model\Config\Source\Enabledisable"/>
+            </settings>
+        </column>
+
+        <column name="customer_group_ids">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Groups</label>
+                <sortOrder>50</sortOrder>
+            </settings>
+        </column>
+
+        <column name="sort_order">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Sort Order</label>
+                <sortOrder>60</sortOrder>
+            </settings>
+        </column>
+
+        <column name="description">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Description</label>
+                <sortOrder>70</sortOrder>
+            </settings>
+        </column>
+
+        <column name="cod_restricted" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">COD Restricted</label>
+                <sortOrder>75</sortOrder>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+            </settings>
+        </column>
+
+        <column name="partial_payment_eligible" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Partial Payment</label>
+                <sortOrder>77</sortOrder>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+            </settings>
+        </column>
+
+        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date"
+                component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Updated At</label>
+                <sortOrder>80</sortOrder>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions"
+                       class="Custom\DeliveryRestriction\Ui\Component\Listing\Column\ZipcodeActions">
+            <settings>
+                <indexField>zipcode_id</indexField>
+                <label translate="true">Actions</label>
+                <sortOrder>90</sortOrder>
+            </settings>
+        </actionsColumn>
+
+    </columns>
+</listing>
