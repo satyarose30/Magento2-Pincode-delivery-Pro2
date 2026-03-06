@@ -55,7 +55,10 @@ class RestrictPaymentByZip implements ObserverInterface
 
     private function doExecute(Observer $observer): void
     {
-        if (!$this->config->isCodRestrictionEnabled()) {
+        $quote   = $observer->getData('quote');
+        $storeId = $quote instanceof Quote ? (int) $quote->getStoreId() : null;
+
+        if (!$this->config->isCodRestrictionEnabled($storeId)) {
             return;
         }
 
@@ -65,7 +68,7 @@ class RestrictPaymentByZip implements ObserverInterface
         }
 
         $methodCode      = (string) $methodInstance->getCode();
-        $restrictedCodes = $this->config->getCodPaymentCodes();
+        $restrictedCodes = $this->config->getCodPaymentCodes($storeId);
 
         if (!in_array($methodCode, $restrictedCodes, true)) {
             return; // this payment method is not subject to zip restriction
@@ -77,15 +80,13 @@ class RestrictPaymentByZip implements ObserverInterface
             return; // no zip entered yet — don't hide the method
         }
 
-        $storeId = null; // uses current store scope from ScopeConfig
-
         if (!$this->zipValidator->isCodAvailable($zip, $storeId)) {
             /** @var \Magento\Framework\DataObject $result */
             $result = $observer->getData('result');
             if ($result !== null) {
                 $result->setData('is_available', false);
 
-                if ($this->config->isLoggingEnabled()) {
+                if ($this->config->isLoggingEnabled($storeId)) {
                     $this->logger->info('[DeliveryRestriction] COD hidden for zip', [
                         'zip'         => $zip,
                         'method_code' => $methodCode,

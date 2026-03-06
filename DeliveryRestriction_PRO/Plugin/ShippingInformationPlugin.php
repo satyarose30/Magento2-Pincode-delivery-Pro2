@@ -10,7 +10,6 @@ use Magento\Checkout\Api\Data\ShippingInformationInterface;
 use Magento\Checkout\Model\ShippingInformationManagement;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Checkout Shipping Step — Layer 1 of dual protection.
@@ -39,7 +38,6 @@ class ShippingInformationPlugin
     public function __construct(
         private readonly Config                  $config,
         private readonly ZipValidator            $zipValidator,
-        private readonly StoreManagerInterface   $storeManager,
         private readonly CartRepositoryInterface $cartRepository,
         private readonly CategoryExtractor       $categoryExtractor
     ) {}
@@ -52,7 +50,8 @@ class ShippingInformationPlugin
         int                           $cartId,
         ShippingInformationInterface  $addressInformation
     ): array {
-        $storeId = (int) $this->storeManager->getStore()->getId();
+        $quote   = $this->cartRepository->getActive($cartId);
+        $storeId = (int) $quote->getStoreId();
 
         if (!$this->config->isEnabled($storeId) || !$this->config->isBlockOrderEnabled($storeId)) {
             return [$cartId, $addressInformation];
@@ -69,7 +68,6 @@ class ShippingInformationPlugin
         }
 
         // FIX MEDIUM: resolve customer group and categories from the active quote
-        $quote           = $this->cartRepository->getActive($cartId);
         $customerGroupId = (int) $quote->getCustomerGroupId();
         $categoryIds     = $this->categoryExtractor->extractFromQuote($quote);
 

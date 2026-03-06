@@ -9,7 +9,6 @@ use Custom\DeliveryRestriction\Model\ZipValidator;
 use Magento\Payment\Model\MethodList;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Api\Data\CartInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Layer 3 — Payment Method Filter.
@@ -29,10 +28,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class PaymentMethodPlugin
 {
     public function __construct(
-        private readonly Config                $config,
-        private readonly ZipValidator          $zipValidator,
-        private readonly StoreManagerInterface $storeManager,
-        private readonly Logger                $logger
+        private readonly Config       $config,
+        private readonly ZipValidator $zipValidator,
+        private readonly Logger       $logger
     ) {}
 
     /**
@@ -49,7 +47,7 @@ class PaymentMethodPlugin
         CartInterface   $quote
     ): array {
         try {
-            $storeId = (int) $this->storeManager->getStore()->getId();
+            $storeId = (int) $quote->getStoreId();
 
             // Only act when both features are enabled
             if (!$this->config->isEnabled($storeId) || !$this->config->isCodRestrictionEnabled($storeId)) {
